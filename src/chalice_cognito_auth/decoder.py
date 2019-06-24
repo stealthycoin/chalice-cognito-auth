@@ -18,9 +18,12 @@ class TokenDecoder:
         self._now = now
 
     def decode(self, token):
-        self._verify(token)
-        claims = self._get_claims(token)
-        return claims
+        try:
+            self._verify(token)
+            claims = self._get_claims(token)
+            return claims
+        except:
+            raise InvalidToken('Error decoding token')
 
     def _verify(self, token):
         headers = jwt.get_unverified_headers(token)
