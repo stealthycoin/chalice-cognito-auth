@@ -1,8 +1,6 @@
 import os
 import sys
 
-import pytest
-
 from chalice import Blueprint
 
 from chalice_cognito_auth.exceptions import InvalidAuthHandlerNameError

@@ -14,8 +14,12 @@ class UserPoolHandlerFactory:
             blueprint_factory = BlueprintFactory()
         self._blueprint_factory = blueprint_factory
 
-    def create_user_pool_handler(self, app_client_id, user_pool_id,
+    def create_user_pool_handler(self, app_client_id=None, user_pool_id=None,
                                  region=None, name=None):
+        if app_client_id is None:
+            app_client_id = os.environ.get('CLIENT_APP_ID')
+        if user_pool_id is None:
+            user_pool_id = os.environ.get('POOL_ID')
         if region is None:
             region = os.environ.get('AWS_REGION')
         if name is None:

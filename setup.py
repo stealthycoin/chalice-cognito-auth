@@ -40,6 +40,12 @@ setup_options = dict(
     package_dir={"": "src"},
     packages=find_packages(where="src", exclude=['tests*']),
     license="Apache License 2.0",
+    classifiers=[
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+        "Development Status :: 3 - Alpha",
+    ],
 )
 
 
