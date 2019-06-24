@@ -1,0 +1,4 @@
+htmlcov/
+.pytest_cache/
+.coverage
+.coveragerc

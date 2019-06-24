@@ -1,0 +1,4 @@
+pytest==3.5.0
+pytest-cov==2.5.1
+chalice>=1.8
+mock==2.0.0
