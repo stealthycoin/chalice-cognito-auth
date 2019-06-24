@@ -17,7 +17,7 @@ class UserPoolHandlerFactory:
     def create_user_pool_handler(self, app_client_id=None, user_pool_id=None,
                                  region=None, name=None):
         if app_client_id is None:
-            app_client_id = os.environ.get('CLIENT_APP_ID')
+            app_client_id = os.environ.get('APP_CLIENT_ID')
         if user_pool_id is None:
             user_pool_id = os.environ.get('POOL_ID')
         if region is None:
