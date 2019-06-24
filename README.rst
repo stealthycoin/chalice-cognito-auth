@@ -1,3 +1,7 @@
+.. image:: https://badge.fury.io/py/chalice-cognito-auth.svg
+    :target: https://badge.fury.io/py/chalice-cognito-auth
+
+
 Purpose
 =======
 
