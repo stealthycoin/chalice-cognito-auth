@@ -27,7 +27,7 @@ Next we add ``chalice-cognito-auth`` as a dependency::
 Now update the ``app.py`` file to configure a default user pool handler
 using the ``UserPoolHandlerFactory`` class.
 
-.. code python::
+.. code:: python
 
     from chalice import Chalice
 
