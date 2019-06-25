@@ -80,16 +80,6 @@ Now deploy the application using::
 
   $ chalice deploy
   Creating deployment package.
-
-  Could not install dependencies:
-  pycryptodome==3.3.1
-  You will have to build these yourself and vendor them in
-  the chalice vendor folder.
-
-  Your deployment will continue but may not work correctly
-  if missing dependencies are not present. For more information:
-  http://chalice.readthedocs.io/en/latest/topics/packaging.html
-
   Updating policy for IAM role: test-auth-dev
   Updating lambda function: test-auth-dev
   Updating lambda function: test-auth-dev-UserPoolAuth
@@ -99,12 +89,11 @@ Now deploy the application using::
     - Lambda ARN: arn:aws:lambda:us-west-2:...:function:test-auth-dev-UserPoolAuth
     - Rest API URL: https://id.execute-api.us-west-2.amazonaws.com/api/
 
-This will give a packaging warning, which is safe to ignore. Now that it has
-been deployed we can access the API using the Rest API URL. chalice-cognito-auth
-injects a ``login`` route which accepts a ``POST`` request with a JSON payload
-containing the two keys ``username`` and ``password``. Make sure your configured
-userpool has a user in it that can be used for testing and send something like
-the following::
+Now that it has been deployed we can access the API using the Rest API
+URL. chalice-cognito-auth injects a ``login`` route which accepts a ``POST``
+request with a JSON payload containing the two keys ``username`` and
+``password``. Make sure your configured userpool has a user in it that can be
+used for testing and send something like the following::
 
   $ curl -X POST -H Content-Type:application/json https://id.execute-api.us-west-2.amazonaws.com/api/login -d '{"username":"StealthyCoin", "password": "secret"}'
   {"id_token":"...","refresh_token":"...","access_token":"...","token_type":"Bearer"}
