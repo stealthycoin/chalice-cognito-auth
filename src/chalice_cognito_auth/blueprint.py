@@ -37,23 +37,12 @@ class BlueprintFactory:
             password = get_param(body, 'password', required=True)
             return lifecycle.login(username, password)
 
-        @routes.route('/logout', methods=['POST'],
-                      authorizer=auth)
-        @handle_client_errors
-        def logout():
-            body = routes.current_request.json_body
-            access_token = get_param(body, 'access_token', required=True)
-            lifecycle.logout(access_token)
-            return 'success'
-
         @routes.route('/refresh', methods=['POST'])
         @handle_client_errors
         def refresh():
             body = routes.current_request.json_body
-            id_token = get_param(body, 'id_token', required=True)
             refresh_token = get_param(body, 'refresh_token', required=True)
-            access_token = get_param(body, 'access_token', required=True)
-            return lifecycle.refresh(id_token, refresh_token, access_token)
+            return lifecycle.refresh(refresh_token)
 
         setattr(sys.modules[__name__], name, auth)
         return routes, auth
