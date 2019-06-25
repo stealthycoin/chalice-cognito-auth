@@ -22,6 +22,8 @@ class TokenDecoder:
             self._verify(token)
             claims = self._get_claims(token)
             return claims
+        except InvalidToken:
+            raise
         except:
             raise InvalidToken('Error decoding token')
 
