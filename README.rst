@@ -1,6 +1,7 @@
 .. image:: https://badge.fury.io/py/chalice-cognito-auth.svg
     :target: https://badge.fury.io/py/chalice-cognito-auth
-
+.. image:: https://travis-ci.org/stealthycoin/chalice-cognito-auth.svg?branch=master
+    :target: https://travis-ci.org/stealthycoin/chalice-cognito-auth
 
 Purpose
 =======
