@@ -27,6 +27,7 @@ def find_version(*file_paths):
 
 requires = [
     'python-jose[cryptography]<4.0.0',
+    'boto3>=1.9,<2.0',
 ]
 
 
