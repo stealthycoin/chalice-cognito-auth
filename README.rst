@@ -48,7 +48,7 @@ using the ``UserPoolHandlerFactory`` class.
     @app.route('/whoami', authorizer=user_pool_handler.auth)
     def index():
 	return {
-	    'username': app.current_request.context['authorizer']['principalId']
+	    'username': user_pool_handler.current_user
 	}
 
 

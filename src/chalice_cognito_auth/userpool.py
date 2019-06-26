@@ -45,6 +45,15 @@ class UserPoolHandler:
     def auth(self):
         return self._auth_wrapper
 
+    @property
+    def current_user(self):
+        request = self.blueprint.current_request
+        return request.context.get('authorizer', {}).get('principalId')
+
+    @property
+    def pid(self):
+        return self.current_user
+
 
 class CognitoLifecycle:
     def __init__(self, app_client_id, user_pool_id, cognito):
