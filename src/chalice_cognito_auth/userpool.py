@@ -83,12 +83,15 @@ class CognitoLifecycle:
             },
             ClientId=self._app_client_id,
         )
-        if 'AuthenticationResult' not in result:
-            raise ChallengeError(
+        if 'ChallengeName' in result:
+            print(result)
+            error = ChallengeError(
 	        result['ChallengeName'],
                 result['Session'],
                 result['ChallengeParameters'],
             )
+            print(error)
+            raise error
         result = result['AuthenticationResult']
         if 'AccessToken' in result:
             return self._get_tokens(result)

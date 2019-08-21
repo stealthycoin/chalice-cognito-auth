@@ -15,7 +15,7 @@ class InvalidAuthHandlerNameError(Exception):
 class ChallengeError(Exception):
     """ChallengeError
 
-    Raised during login when an additional challenge needs to bepassed before
+    Raised during login when an additional challenge needs to be passed before
     login.
     """
     def __init__(self, challenge, session, params):

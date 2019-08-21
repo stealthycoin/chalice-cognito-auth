@@ -40,6 +40,10 @@ class BlueprintFactory:
             try:
                 return lifecycle.login(username, password)
             except ChallengeError as e:
+                print(e)
+                print(e.params)
+                print(e.challenge)
+                print(e.session)
                 return Response(
                     body=e.params,
                     status_code=401,
