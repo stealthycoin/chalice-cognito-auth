@@ -20,5 +20,5 @@ class ChallengeError(Exception):
     """
     def __init__(self, challenge, session, params):
         self.challenge = challenge
-        self.session = session,
+        self.session = session
         self.params = params
