@@ -6,6 +6,7 @@ from chalice_cognito_auth.blueprint import BlueprintFactory
 from chalice_cognito_auth.decoder import TokenDecoder
 from chalice_cognito_auth.decoder import KeyFetcher
 from chalice_cognito_auth.authorizer import UserPoolAuthorizer
+from chalice_cognito_auth.exceptions import ChallengeError
 
 
 class UserPoolHandlerFactory:
@@ -82,10 +83,24 @@ class CognitoLifecycle:
             },
             ClientId=self._app_client_id,
         )
+        if 'AuthenticationResult' not in result:
+            raise ChallengeError(
+	        result['ChallengeName'],
+                result['Session'],
+                result['ChallengeParameters'],
+            )
         result = result['AuthenticationResult']
         if 'AccessToken' in result:
             return self._get_tokens(result)
         return result
+
+    def auth_challengee(self, challenge, session, params):
+        result = self._cognito.respond_to_auth_challenge(
+            ChallengeName=challenge,
+            Session=session,
+            ChallengeResponses=params,
+            ClientId=self._app_client_id,
+        )
 
     def refresh(self, refresh_token):
         result = self._cognito.initiate_auth(
