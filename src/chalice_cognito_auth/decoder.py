@@ -76,5 +76,4 @@ class KeyFetcher:
             region=self._region,
             user_pool_id=self._user_pool_id,
         )
-        print(url)
         return json.loads(self._urlopen(url).read())['keys']

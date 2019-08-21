@@ -2,8 +2,10 @@ import os
 import sys
 
 from chalice import Blueprint
+from chalice import Response
 
 from chalice_cognito_auth.exceptions import InvalidAuthHandlerNameError
+from chalice_cognito_auth.exceptions import ChallengeError
 from chalice_cognito_auth.utils import get_param
 from chalice_cognito_auth.utils import handle_client_errors
 
@@ -35,7 +37,26 @@ class BlueprintFactory:
             body = routes.current_request.json_body
             username = get_param(body, 'username', required=True)
             password = get_param(body, 'password', required=True)
-            return lifecycle.login(username, password)
+            try:
+                return lifecycle.login(username, password)
+            except ChallengeError as e:
+                return Response(
+                    body=e.params,
+                    status_code=401,
+                    headers={
+                        'Challenge': e.challenge,
+                        'Session': e.session,
+                    }
+                )
+
+        @routes.route('/auth_challenge', methods=['POST'])
+        @handle_client_errors
+        def auth_challenge():
+            body = routes.current_request.json_body
+            challenge = get_param(body, 'challenge', required=True)
+            session = get_param(body, 'session', required=True)
+            params = get_param(body, 'params', required=True)
+            return lifecycle.auth_challenge(challenge, session, params)
 
         @routes.route('/refresh', methods=['POST'])
         @handle_client_errors
