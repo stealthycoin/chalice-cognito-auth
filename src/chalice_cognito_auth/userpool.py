@@ -86,6 +86,28 @@ class CognitoLifecycle:
             return self._get_tokens(result)
         return result
 
+    def register(self, username, password, properties):
+        user_attributes = [
+            {
+                'Name': k,
+                'Value': v,
+            }
+            for k, v in properties.items()
+        ]
+        result = self._cognito.sign_up(
+            Username=username,
+            Password=password,
+            UserAttributes=user_attributes,
+            ClientId=self._app_client_id,
+        )
+
+    def confirm(self, username, code):
+        result = self._cognito.confirm_sign_up(
+            ConfirmationCode=code,
+            Username=username,
+            ClientId=self._app_client_id,
+        )
+        return result
 
     def login(self, username, password):
         result = self._cognito.initiate_auth(

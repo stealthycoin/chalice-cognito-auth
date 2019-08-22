@@ -31,6 +31,24 @@ class BlueprintFactory:
         def auth(auth_request):
             return authorizer.auth_handler(auth_request)
 
+        @routes.route('/register', methods=['POST'])
+        @handle_client_errors
+        def register():
+            body = routes.current_request.json_body
+            username = get_param(body, 'username', required=True)
+            password = get_param(body, 'password', required=True)
+            body.pop('username')
+            body.pop('password')
+            return lifecycle.register(username, password, body)
+
+        @routes.route('/confirm_registration', methods=['POST'])
+        @handle_client_errors
+        def confirm():
+            body = routes.current_request.json_body
+            username = get_param(body, 'username', required=True)
+            code = get_param(body, 'code', required=True)
+            lifecycle.confirm(username, code)
+
         @routes.route('/login', methods=['POST'])
         @handle_client_errors
         def login():
