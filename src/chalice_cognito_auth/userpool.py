@@ -77,7 +77,7 @@ class CognitoLifecycle:
     def _handle_auth_attempt(self, result):
         if 'ChallengeName' in result:
             raise ChallengeError(
-	        result['ChallengeName'],
+                result['ChallengeName'],
                 result['Session'],
                 result['ChallengeParameters'],
             )
@@ -100,6 +100,7 @@ class CognitoLifecycle:
             UserAttributes=user_attributes,
             ClientId=self._app_client_id,
         )
+        return result
 
     def confirm(self, username, code):
         result = self._cognito.confirm_sign_up(

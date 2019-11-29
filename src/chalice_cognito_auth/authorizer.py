@@ -42,6 +42,6 @@ class PrincipalSelector:
         raise NotImplementedError('get_principal')
 
 
-class UsernameSelector:
+class UsernameSelector(PrincipalSelector):
     def get_principal(self, claims):
         return claims.get('cognito:username')

@@ -24,7 +24,7 @@ class TokenDecoder:
             return claims
         except InvalidToken:
             raise
-        except:
+        except Exception:
             raise InvalidToken('Error decoding token')
 
     def _verify(self, token):
@@ -65,6 +65,10 @@ class KeyFetcher:
         if urlopen is None:
             urlopen = urllib.request.urlopen
         self._urlopen = urlopen
+
+    @classmethod
+    def from_env(cls):
+        pass
 
     def get_keys(self):
         if self._keys is None:
