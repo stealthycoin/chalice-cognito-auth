@@ -1,8 +1,11 @@
-.PHONY: publish, clean
+.PHONY: publish, clean, build
 
 devinstall:
 	pip install -r requirements-dev.txt
 	pip install -e .
+
+publishinstall:
+	pip install -U twine
 
 test:
 	pytest tests/unit
