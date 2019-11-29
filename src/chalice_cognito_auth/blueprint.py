@@ -19,6 +19,9 @@ class BlueprintFactory:
             return wrapped
         return renamer
 
+    @classmethod
+    def from_env(cls) -> 'BlueprintFactory':
+        return cls()
 
     def create_blueprint(self, name, authorizer, lifecycle):
         if name in vars(sys.modules[__name__]):
@@ -97,7 +100,7 @@ def _import_chalice_app_if_needed():
     # a circular import.
     if 'app' in sys.modules:
         return
-    import app
+    import app  # noqa
 
 
 if os.environ.get("AWS_EXECUTION_ENV") is not None:

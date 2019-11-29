@@ -7,6 +7,10 @@ from jose import jwk
 from jose.utils import base64url_decode
 
 from chalice_cognito_auth.exceptions import InvalidToken
+from chalice_cognito_auth.utils import env_var
+from chalice_cognito_auth.constants import REGION_ENV_VAR
+from chalice_cognito_auth.constants import USER_POOL_ID_ENV_VAR
+from chalice_cognito_auth.constants import CLIENT_ID_ENV_VAR
 
 
 class TokenDecoder:
@@ -17,6 +21,13 @@ class TokenDecoder:
             now = time.time
         self._now = now
 
+    @classmethod
+    def from_env(cls) -> 'TokenDecoder':
+        return cls(
+            key_fetcher=KeyFetcher.from_env(),
+            app_client_id=env_var(CLIENT_ID_ENV_VAR),
+        )
+
     def decode(self, token):
         try:
             self._verify(token)
@@ -24,7 +35,7 @@ class TokenDecoder:
             return claims
         except InvalidToken:
             raise
-        except:
+        except Exception:
             raise InvalidToken('Error decoding token')
 
     def _verify(self, token):
@@ -65,6 +76,13 @@ class KeyFetcher:
         if urlopen is None:
             urlopen = urllib.request.urlopen
         self._urlopen = urlopen
+
+    @classmethod
+    def from_env(cls) -> 'KeyFetcher':
+        return cls(
+            region=env_var(REGION_ENV_VAR),
+            user_pool_id=env_var(USER_POOL_ID_ENV_VAR),
+        )
 
     def get_keys(self):
         if self._keys is None:

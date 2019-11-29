@@ -1,10 +1,26 @@
+.PHONY: publish, clean, build
+
+devinstall:
+	pip install -r requirements-dev.txt
+	pip install -e .
+
+publishinstall:
+	pip install -U twine
+
+test:
+	pytest tests/unit
+
+check:
+	flake8 test/ src/
+
+prcheck: check test
+
+
 build:
 	python setup.py sdist bdist_wheel
 
-.PHONY: publish
 publish:
 	twine upload dist/*
 
-.PHONY: clean
 clean:
 	rm -r build dist

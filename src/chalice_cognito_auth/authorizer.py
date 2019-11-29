@@ -1,6 +1,7 @@
 from chalice import AuthResponse
 
 from chalice_cognito_auth.exceptions import InvalidToken
+from chalice_cognito_auth.decoder import TokenDecoder
 
 
 class UserPoolAuthorizer:
@@ -14,6 +15,10 @@ class UserPoolAuthorizer:
         if principal_selector is None:
             principal_selector = UsernameSelector()
         self._principal_selector = principal_selector
+
+    @classmethod
+    def from_env(cls) -> 'UserPoolAuthorizer':
+        return cls(decoder=TokenDecoder.from_env())
 
     def auth_handler(self, auth_request):
         token = auth_request.token
@@ -42,6 +47,6 @@ class PrincipalSelector:
         raise NotImplementedError('get_principal')
 
 
-class UsernameSelector:
+class UsernameSelector(PrincipalSelector):
     def get_principal(self, claims):
         return claims.get('cognito:username')
