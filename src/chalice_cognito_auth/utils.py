@@ -1,9 +1,13 @@
+import os
 from collections import namedtuple
+from typing import Dict
 
 from botocore.exceptions import ClientError
 from chalice import BadRequestError
 from chalice import UnauthorizedError
 from chalice import ChaliceViewError
+
+from chalice_cognito_auth.exceptions import MissingEnvironmentVariableError
 
 
 Error = namedtuple('Error', ['cls', 'fmt_str'])
@@ -38,3 +42,16 @@ def handle_client_errors(fn):
         except ClientError as e:
             client_error_to_chalice_error(e)
     return wrapped
+
+
+def env_var(
+        key: str,
+        default: str = None,
+        env: Dict[str, str] = os.environ,
+) -> str:
+    try:
+        return env[key]
+    except KeyError:
+        if default is None:
+            raise MissingEnvironmentVariableError(key)
+        return default

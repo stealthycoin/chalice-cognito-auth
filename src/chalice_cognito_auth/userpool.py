@@ -1,5 +1,3 @@
-import os
-
 import boto3
 
 from chalice_cognito_auth.blueprint import BlueprintFactory
@@ -7,6 +5,12 @@ from chalice_cognito_auth.decoder import TokenDecoder
 from chalice_cognito_auth.decoder import KeyFetcher
 from chalice_cognito_auth.authorizer import UserPoolAuthorizer
 from chalice_cognito_auth.exceptions import ChallengeError
+from chalice_cognito_auth.constants import CLIENT_ID_ENV_VAR
+from chalice_cognito_auth.constants import USER_POOL_ID_ENV_VAR
+from chalice_cognito_auth.constants import REGION_ENV_VAR
+from chalice_cognito_auth.constants import DEFAULT_USER_POOL_HANDLER_NAME
+from chalice_cognito_auth.constants import USER_POOL_HANDLER_NAME_ENV_VAR
+from chalice_cognito_auth.utils import env_var
 
 
 class UserPoolHandlerFactory:
@@ -18,13 +22,13 @@ class UserPoolHandlerFactory:
     def create_user_pool_handler(self, app_client_id=None, user_pool_id=None,
                                  region=None, name=None):
         if app_client_id is None:
-            app_client_id = os.environ.get('APP_CLIENT_ID')
+            app_client_id = env_var(CLIENT_ID_ENV_VAR)
         if user_pool_id is None:
-            user_pool_id = os.environ.get('POOL_ID')
+            user_pool_id = env_var(USER_POOL_ID_ENV_VAR)
         if region is None:
-            region = os.environ.get('AWS_REGION')
+            region = env_var(REGION_ENV_VAR)
         if name is None:
-            name = 'UserPoolAuth'
+            name = DEFAULT_USER_POOL_HANDLER_NAME
         key_fetcher = KeyFetcher(region, user_pool_id)
         decoder = TokenDecoder(key_fetcher, app_client_id)
         authorizer = UserPoolAuthorizer(decoder)
@@ -41,6 +45,23 @@ class UserPoolHandler:
         self._authorizer = authorizer
         self.blueprint = blueprint
         self._auth_wrapper = auth_wrapper
+
+    @classmethod
+    def from_env(cls) -> 'UserPoolHandler':
+        authorizer = UserPoolAuthorizer.from_env(),
+        blueprint, auth_wrapper = BlueprintFactory.from_env().create_blueprint(
+            name=env_var(
+                USER_POOL_HANDLER_NAME_ENV_VAR,
+                DEFAULT_USER_POOL_HANDLER_NAME
+            ),
+            authorizer=authorizer,
+            lifecycle=CognitoLifecycle.from_env(),
+        )
+        return cls(
+            authorizer=authorizer,
+            blueprint=blueprint,
+            auth_wrapper=auth_wrapper,
+        )
 
     @property
     def auth(self):
@@ -61,6 +82,17 @@ class CognitoLifecycle:
         self._app_client_id = app_client_id
         self._user_pool_id = user_pool_id
         self._cognito = cognito
+
+    @classmethod
+    def from_env(cls) -> 'CognitoLifecycle':
+        return cls(
+            app_client_id=env_var(CLIENT_ID_ENV_VAR),
+            user_pool_id=env_var(USER_POOL_ID_ENV_VAR),
+            cognito=boto3.client(
+                'cognito-idp',
+                region_name=env_var(REGION_ENV_VAR),
+            )
+        )
 
     def _get_tokens(self, result):
         tokens = {}

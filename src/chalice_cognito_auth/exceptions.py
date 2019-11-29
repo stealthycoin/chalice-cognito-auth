@@ -22,3 +22,11 @@ class ChallengeError(Exception):
         self.challenge = challenge
         self.session = session
         self.params = params
+
+
+class MissingEnvironmentVariableError(Exception):
+    def __init__(self, name):
+        self.name = name
+
+    def __str__(self) -> str:
+        return f'Could not find required environment variable: "{self.name}".'
