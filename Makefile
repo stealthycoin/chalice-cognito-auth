@@ -10,6 +10,9 @@ test:
 check:
 	flake8 test/ src/
 
+prcheck: check test
+
+
 build:
 	python setup.py sdist bdist_wheel
 
