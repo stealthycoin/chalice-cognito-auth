@@ -55,3 +55,10 @@ def env_var(
         if default is None:
             raise MissingEnvironmentVariableError(key)
         return default
+
+
+def is_running_on_lambda(env: Dict[str, str] = os.environ):
+    execution_env = env.get("AWS_EXECUTION_ENV", None)
+    if execution_env is None:
+        return False
+    return execution_env.startswith('AWS_Lambda')
