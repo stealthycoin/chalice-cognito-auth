@@ -1,4 +1,3 @@
-import os
 import sys
 
 from chalice import Blueprint
@@ -8,6 +7,7 @@ from chalice_cognito_auth.exceptions import InvalidAuthHandlerNameError
 from chalice_cognito_auth.exceptions import ChallengeError
 from chalice_cognito_auth.utils import get_param
 from chalice_cognito_auth.utils import handle_client_errors
+from chalice_cognito_auth.utils import is_running_on_lambda
 
 
 class BlueprintFactory:
@@ -103,5 +103,5 @@ def _import_chalice_app_if_needed():
     import app  # noqa
 
 
-if os.environ.get("AWS_EXECUTION_ENV") is not None:
+if is_running_on_lambda():
     _import_chalice_app_if_needed()
