@@ -25,14 +25,14 @@ Next we add ``chalice-cognito-auth`` as a dependency::
   $ echo "chalice-cognito-auth" >> requirements.txt
 
 
-Now update the ``app.py`` file to configure a default user pool handler
-using the ``UserPoolHandlerFactory`` class.
+Now update the ``app.py`` file to configure a default user pool handler.
+
 
 .. code:: python
 
     from chalice import Chalice
 
-    from chalice_cognito_auth.userpool import UserPoolHandlerFactory
+    from chalice_cognito_auth
 
 
     app = Chalice(app_name='test-auth')
@@ -41,7 +41,7 @@ using the ``UserPoolHandlerFactory`` class.
 	'BLUEPRINTS',
     ])
 
-    user_pool_handler = UserPoolHandlerFactory().create_user_pool_handler()
+    user_pool_handler = chalice_cognito_auth.default_user_pool_handler()
     app.register_blueprint(user_pool_handler.blueprint)
 
 
