@@ -48,7 +48,7 @@ class UserPoolHandler:
 
     @classmethod
     def from_env(cls) -> 'UserPoolHandler':
-        authorizer = UserPoolAuthorizer.from_env(),
+        authorizer = UserPoolAuthorizer.from_env()
         blueprint, auth_wrapper = BlueprintFactory.from_env().create_blueprint(
             name=env_var(
                 USER_POOL_HANDLER_NAME_ENV_VAR,
