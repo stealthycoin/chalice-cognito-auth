@@ -38,6 +38,7 @@ setup_options = dict(
     url='https://github.com/stealthycoin/chalice-cognito-auth',
     long_description=read('README.rst'),
     author='John Carlyle',
+    include_package_data=True,
     install_requires=requires,
     package_dir={"": "src"},
     packages=find_packages(where="src", exclude=['tests*']),
@@ -47,6 +48,9 @@ setup_options = dict(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
         "Development Status :: 3 - Alpha",
+    ],
+    scripts=[
+        'src/chalice_cognito_auth/bin/generate-cognito-template',
     ],
 )
 

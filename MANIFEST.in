@@ -1,0 +1,2 @@
+include src/chalice_cognito_auth/bin/*
+include src/chalice_cognito_auth/data/*
