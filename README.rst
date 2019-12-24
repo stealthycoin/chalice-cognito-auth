@@ -32,7 +32,7 @@ Now update the ``app.py`` file to configure a default user pool handler.
 
     from chalice import Chalice
 
-    from chalice_cognito_auth
+    import chalice_cognito_auth
 
 
     app = Chalice(app_name='test-auth')
