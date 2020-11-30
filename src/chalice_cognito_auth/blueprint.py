@@ -23,18 +23,22 @@ class BlueprintFactory:
     def from_env(cls) -> 'BlueprintFactory':
         return cls()
 
-    def create_blueprint(self, name, authorizer, lifecycle):
+    def create_blueprint(self, name, authorizer, lifecycle, cors=False):
         if name in vars(sys.modules[__name__]):
             raise InvalidAuthHandlerNameError(name)
 
         routes = Blueprint('%s' % __name__)
+
+        extra_kwargs = {}
+        if cors is True:
+            extra_kwargs['cors'] = True
 
         @routes.authorizer(name=name)
         @self._rename_fn(name)
         def auth(auth_request):
             return authorizer.auth_handler(auth_request)
 
-        @routes.route('/register', methods=['POST'])
+        @routes.route('/register', methods=['POST'], **extra_kwargs)
         @handle_client_errors
         def register():
             body = routes.current_request.json_body
@@ -44,7 +48,7 @@ class BlueprintFactory:
             body.pop('password')
             return lifecycle.register(username, password, body)
 
-        @routes.route('/confirm_registration', methods=['POST'])
+        @routes.route('/confirm_registration', methods=['POST'], **extra_kwargs)
         @handle_client_errors
         def confirm():
             body = routes.current_request.json_body
@@ -52,7 +56,7 @@ class BlueprintFactory:
             code = get_param(body, 'code', required=True)
             lifecycle.confirm(username, code)
 
-        @routes.route('/login', methods=['POST'])
+        @routes.route('/login', methods=['POST'], **extra_kwargs)
         @handle_client_errors
         def login():
             body = routes.current_request.json_body
@@ -70,7 +74,7 @@ class BlueprintFactory:
                     }
                 )
 
-        @routes.route('/auth_challenge', methods=['POST'])
+        @routes.route('/auth_challenge', methods=['POST'], **extra_kwargs)
         @handle_client_errors
         def auth_challenge():
             body = routes.current_request.json_body
@@ -79,7 +83,7 @@ class BlueprintFactory:
             params = get_param(body, 'params', required=True)
             return lifecycle.auth_challenge(challenge, session, params)
 
-        @routes.route('/refresh', methods=['POST'])
+        @routes.route('/refresh', methods=['POST'], **extra_kwargs)
         @handle_client_errors
         def refresh():
             body = routes.current_request.json_body

@@ -20,13 +20,13 @@ class UserPoolHandlerFactory:
         self._blueprint_factory = blueprint_factory
 
     def create_user_pool_handler(self, app_client_id=None, user_pool_id=None,
-                                 region=None, name=None):
+                                 region=None, name=None, cors=False):
         if app_client_id is None:
-            app_client_id = env_var(CLIENT_ID_ENV_VAR)
+            app_client_id = env_var(CLIENT_ID_ENV_VAR, 'PLACEHOLDER')
         if user_pool_id is None:
-            user_pool_id = env_var(USER_POOL_ID_ENV_VAR)
+            user_pool_id = env_var(USER_POOL_ID_ENV_VAR, 'PLACEHOLDER')
         if region is None:
-            region = env_var(REGION_ENV_VAR)
+            region = env_var(REGION_ENV_VAR, 'PLACEHOLDER')
         if name is None:
             name = DEFAULT_USER_POOL_HANDLER_NAME
         key_fetcher = KeyFetcher(region, user_pool_id)
@@ -35,7 +35,7 @@ class UserPoolHandlerFactory:
         cognito = boto3.client('cognito-idp', region_name=region)
         lifecycle = CognitoLifecycle(app_client_id, user_pool_id, cognito)
         blueprint, auth_wrapper = self._blueprint_factory.create_blueprint(
-            name, authorizer, lifecycle)
+            name, authorizer, lifecycle, cors=cors)
         handler = UserPoolHandler(authorizer, blueprint, auth_wrapper)
         return handler
 
