@@ -37,9 +37,6 @@ Now update the ``app.py`` file to configure a default user pool handler.
 
     app = Chalice(app_name='test-auth')
 
-    app.experimental_feature_flags.update([
-	'BLUEPRINTS',
-    ])
 
     user_pool_handler = chalice_cognito_auth.default_user_pool_handler()
     app.register_blueprint(user_pool_handler.blueprint)
